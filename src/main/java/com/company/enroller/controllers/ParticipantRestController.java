@@ -38,15 +38,25 @@ public class ParticipantRestController {
 			return new ResponseEntity<String>("Unable to create. A participant with login " + participant.getLogin() + " already exist.", HttpStatus.CONFLICT);
 		}
 		participantService.add(participant);
-		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+		return new ResponseEntity<>(participant, HttpStatus.OK);
 	}
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteParticipant(@PathVariable("id") String login) {
 		Participant participant = participantService.findByLogin(login);
 		if (participant == null) {
-			return new ResponseEntity(HttpStatus.NOT_FOUND);
+			return new ResponseEntity("Not found", HttpStatus.NOT_FOUND);
 		}
 		participantService.delete(participant);
 		return new ResponseEntity<Participant>(participant, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<?> updateParticipant(@PathVariable("id") String login, @RequestBody Participant participant) {
+		Participant foundParticipant = participantService.findByLogin(login);
+		if (foundParticipant == null) {
+			return new ResponseEntity("Not found", HttpStatus.NOT_FOUND);
 		}
+		foundParticipant.setPassword(participant.getPassword());
+		participantService.update(foundParticipant);
+		return new ResponseEntity<Participant>(foundParticipant, HttpStatus.OK);
+	}
 }

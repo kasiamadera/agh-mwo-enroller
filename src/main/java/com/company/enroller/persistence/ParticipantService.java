@@ -29,9 +29,8 @@ public class ParticipantService {
 	}
 
 	public void add(Participant participant) {
-		Session session = connector.getSession();
-		Transaction transaction = session.beginTransaction();
-		session.save(participant);
+		Transaction transaction = connector.getSession().beginTransaction();
+		connector.getSession().save(participant);
 		transaction.commit();
 	}
 }

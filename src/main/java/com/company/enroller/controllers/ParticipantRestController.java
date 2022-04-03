@@ -34,7 +34,7 @@ public class ParticipantRestController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public ResponseEntity<?> registerParticipant(@RequestBody Participant participant){
 		Participant foundparticipant = participantService.findByLogin(participant.getLogin());
-		if (participant != null) {
+		if (foundparticipant != null) {
 			return new ResponseEntity<String>("Unable to create. Already exsist", HttpStatus.CONFLICT);
 		}
 		participantService.add(participant);

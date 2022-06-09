@@ -4,7 +4,10 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,4 +52,20 @@ public class ParticipantRestControllerTest {
 				.andExpect(jsonPath("$", hasSize(1))).andExpect(jsonPath("$[0].login", is(participant.getLogin())));
 	}
 
+	@Test
+	public void addParticipant() throws Exception {
+		Participant participant = new Participant();
+		participant.setLogin("testlogin");
+		participant.setPassword("testpassword");
+		String inputJSON = "{\"login\":\"testlogin\", \"password\":\"somepassword\"}";
+
+		given(participantService.findByLogin("testlogin")).willReturn((Participant)null);
+		given(participantService.add(participant)).willReturn(participant);
+		mvc.perform(post("/participants").content(inputJSON).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
+
+		given(participantService.findByLogin("testlogin")).willReturn(participant);
+		mvc.perform(post("/participants").content(inputJSON).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isConflict());
+
+		verify(participantService, times(2)).findByLogin("testlogin");
+	}
 }

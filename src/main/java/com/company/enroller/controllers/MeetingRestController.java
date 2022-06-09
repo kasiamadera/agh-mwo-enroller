@@ -18,8 +18,8 @@ import com.company.enroller.model.Meeting;
 public class MeetingRestController {
     @Autowired
     MeetingService meetingService;
-    @Autowired
-    ParticipantService participantService;
+/*    @Autowired
+    ParticipantService participantService;*/
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<?> getMeetings() {
@@ -47,7 +47,7 @@ public class MeetingRestController {
         return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/participants", method = RequestMethod.PUT)
+/*    @RequestMapping(value = "/{id}/participants", method = RequestMethod.PUT)
     public ResponseEntity<?> addParticipant(@PathVariable("id") long id, @RequestBody Participant participant) {
 
         Participant foundParticipant = participantService.findByLogin(participant.getLogin());
@@ -69,7 +69,7 @@ public class MeetingRestController {
 
         meetingService.addParticipantToMeeting(meeting, participant);
         return new ResponseEntity<Meeting>(meeting, HttpStatus.OK);
-    }
+    }*/
 
     @RequestMapping(value = "/{id}/participants", method = RequestMethod.GET)
     public ResponseEntity<?> getParticipants(@PathVariable("id") long id) {
